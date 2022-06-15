@@ -1,0 +1,12 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<h1>This is Your Dashboard</h1>
+
+<p><a href="{% url 'APIStatus' %}">Register Your Binance API</a></p>
+
+<p><a href="{% url 'logout' %}">Logout</a></p>
+
+
+{% endblock content %}  
