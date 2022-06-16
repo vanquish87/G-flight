@@ -15,9 +15,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('accounts.urls')),
     path('trading/', include('trading.urls')),
 ]
+
+# wierd way to tell django where image URL is 
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+# to access 'staticfiles' in 'production' environment: confusing me a bit
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

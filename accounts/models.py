@@ -70,11 +70,15 @@ class Referral(models.Model):
     # on_delete will decide if original Key ie, Account is deleted what will happen in this model, CASCADE will delete all the Referral
     account = models.OneToOneField(Account, on_delete=models.CASCADE)
     # unique code 
-    code = models.CharField(max_length=80)
+    code = models.CharField(max_length=200, unique=True)
     # jisse invitation mila tha uska code
     invited_from = models.CharField(max_length=80) 
     # how many times Referral code is used, to be used in conjuctiion with LeadershipBonus
     used = models.IntegerField(default=0)
+    
+    # one to many with Account, on_delete it will remain 
+    # to='bonuses.LeadershipBonus' used to avoid Circular (or cyclic) imports
+    leadershipbonus = models.ForeignKey(to='bonuses.LeadershipBonus', null=True, blank=True, on_delete=models.SET_NULL)
 
     # create Timestamp automatically
     created = models.DateTimeField(auto_now_add=True)
