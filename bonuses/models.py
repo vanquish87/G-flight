@@ -14,7 +14,7 @@ class DiscountBonus(models.Model):
     payment = models.OneToOneField(to='funds.Payment', on_delete=models.RESTRICT, null=True, blank=True)
 
     # unique code Ex: GFM107
-    admin_code = models.CharField(max_length=200, null=True, blank=True)
+    ref_code = models.CharField(max_length=200, null=True, blank=True)
 
     amount = models.DecimalField(max_digits=9, decimal_places=2, null=True, blank=True)
 

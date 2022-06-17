@@ -16,7 +16,7 @@ class AccountAdmin(UserAdmin):
 
 class ReferralAdmin(UserAdmin):
     # gives the columns to be displayed in admin panel for Accounts
-    list_display = ('account_id', 'code', 'used', 'created')
+    list_display = ('account_id', 'ref_code', 'used', 'created')
     ordering = ('-created',)
     
     filter_horizontal = ()
