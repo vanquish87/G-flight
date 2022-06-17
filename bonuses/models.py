@@ -5,12 +5,18 @@ from accounts.models import Account
 
 # Create your models here.
 class DiscountBonus(models.Model):
-    # one to many with Account, on_delete it will remain 
-    account = models.ForeignKey(Account, null=True, blank=True, on_delete=models.SET_NULL)
-    # unique code 
-    code = models.CharField(max_length=200, unique=True)
-    # how long it would be valid for
-    validity = models.DateTimeField()
+    
+    account = models.OneToOneField(Account, on_delete=models.RESTRICT, null=True, blank=True)
+
+    # OneToOne relatioship
+    # To delete it you will have to delete all objects that reference it manually. RESTRICT
+    # to='funds.Payment' used to avoid Circular (or cyclic) imports
+    payment = models.OneToOneField(to='funds.Payment', on_delete=models.RESTRICT, null=True, blank=True)
+
+    # unique code Ex: GFM107
+    admin_code = models.CharField(max_length=200, null=True, blank=True)
+
+    amount = models.DecimalField(max_digits=9, decimal_places=2, null=True, blank=True)
 
 
     # create Timestamp automatically
@@ -22,8 +28,8 @@ class DiscountBonus(models.Model):
         verbose_name = 'discountbonus'
         verbose_name_plural = 'discountbonuses'
         
-    def __str__(self):
-        return self.code
+    # def __str__(self):
+    #     return self.account
 
 class LeadershipBonus(models.Model):
     # rank from 0 to 7
@@ -75,7 +81,9 @@ class DirectBonus(models.Model):
 class MagicBonus(models.Model):
     # OneToOne relatioship
     # To delete it you will have to delete all objects that reference it manually. RESTRICT
-    directbonus = models.OneToOneField(DirectBonus, on_delete=models.RESTRICT)
+    directbonus = models.OneToOneField(DirectBonus, on_delete=models.RESTRICT, null=True, blank=True)
+    
+    discountbonus = models.OneToOneField(DiscountBonus, on_delete=models.RESTRICT, null=True, blank=True)
 
     amount = models.DecimalField(max_digits=9, decimal_places=2)
     
@@ -87,5 +95,5 @@ class MagicBonus(models.Model):
         verbose_name = 'magicbonus'
         verbose_name_plural = 'magicbonuses'
 
-    def __str__(self):
-        return self.directbonus.ref_num
+    # def __str__(self):
+    #     return self.directbonus.ref_num

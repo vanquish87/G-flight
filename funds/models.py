@@ -21,7 +21,7 @@ class Payment(models.Model):
     # this is what you get when object is instantiated of this class
     # for ex: in Admin Panel
     def __str__(self):
-        return self.payment_id
+        return self.payment_num
 
     
 class Tax(models.Model):
@@ -34,11 +34,13 @@ class Tax(models.Model):
     amount = models.DecimalField(max_digits=9, decimal_places=2)
     # OneToOne relatioship
     # To delete it you will have to delete all objects that reference it manually. RESTRICT
-    payment = models.OneToOneField(Payment, on_delete=models.RESTRICT)
+    payment = models.OneToOneField(Payment, on_delete=models.RESTRICT, null=True, blank=True)
     
     # to='bonuses.DirectBonus' used to avoid Circular (or cyclic) imports
     # solve 'It is impossible to add a non-nullable field 'directbonus' to tax without specifying a default' added null=True
-    directbonus = models.OneToOneField(to='bonuses.DirectBonus', on_delete=models.RESTRICT, null=True)
+    directbonus = models.OneToOneField(to='bonuses.DirectBonus', on_delete=models.RESTRICT, null=True, blank=True)
+    
+    discountbonus = models.OneToOneField(to='bonuses.DiscountBonus', on_delete=models.RESTRICT, null=True, blank=True)
 
     # directbonus =
     
@@ -77,24 +79,30 @@ class Balance(models.Model):
     # one to many with Account, on_delete it will remain 
     account = models.ForeignKey(Account, null=True, blank=True, on_delete=models.SET_NULL)
     # To delete it you will have to delete all objects that reference it manually. RESTRICT
-    payment = models.OneToOneField(Payment, on_delete=models.RESTRICT, null=True)
+    payment = models.OneToOneField(Payment, on_delete=models.RESTRICT, blank=True, null=True)
     # To delete it you will have to delete all objects that reference it manually. RESTRICT
-    tax = models.OneToOneField(Tax, on_delete=models.RESTRICT, null=True)
+    tax = models.OneToOneField(Tax, on_delete=models.RESTRICT, blank=True, null=True)
     # To delete it you will have to delete all objects that reference it manually. RESTRICT
-    insurance = models.OneToOneField(Insurance, on_delete=models.RESTRICT, null=True)
+    insurance = models.OneToOneField(Insurance, on_delete=models.RESTRICT, blank=True, null=True)
     # To delete it you will have to delete all objects that reference it manually. RESTRICT
-    discountbonus = models.OneToOneField(DiscountBonus, on_delete=models.RESTRICT, null=True)
+    discountbonus = models.OneToOneField(DiscountBonus, on_delete=models.RESTRICT, blank=True, null=True)
     # To delete it you will have to delete all objects that reference it manually. RESTRICT
-    directbonus = models.OneToOneField(DirectBonus, on_delete=models.RESTRICT, null=True)
+    directbonus = models.OneToOneField(DirectBonus, on_delete=models.RESTRICT, blank=True, null=True)
     # To delete it you will have to delete all objects that reference it manually. RESTRICT
-    magicbonus = models.OneToOneField(MagicBonus, on_delete=models.RESTRICT, null=True)
+    magicbonus = models.OneToOneField(MagicBonus, on_delete=models.RESTRICT, blank=True, null=True)
     
     cash_in = models.DecimalField(max_digits=9, decimal_places=2, null=True)
     cash_out = models.DecimalField(max_digits=9, decimal_places=2, null=True)
     # solve 'It is impossible to add a non-nullable field 'directbonus' to tax without specifying a default' added null=True
     net_balance = models.DecimalField(max_digits=9, decimal_places=2, null=True)
+
+    narration = models.CharField(max_length=200, null=True, blank=True)
     
     # create Timestamp automatically
     created = models.DateTimeField(auto_now_add=True, null=True)
     id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)
+
+    
+    def __str__(self):
+        return self.narration
     
